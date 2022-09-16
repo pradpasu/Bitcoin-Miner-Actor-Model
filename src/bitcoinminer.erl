@@ -2,12 +2,9 @@
 
 -import(binary, [decode_unsigned/1]).
 -import(crypto, [hash/1]).
--export([getHash/1, getRandomStringFromCrypto/0, performGetHashRecursive/2, createActor/1, dummyReceiver/0]).
+-export([getRandomStringFromCrypto/0, performMiningRecursively/2, getCoins/1, miner/0]).
 
-getHash(NumberOfLeadingZeroes) ->
-	bitcoinminer:performGetHashRecursive(NumberOfLeadingZeroes, 0).
-
-performGetHashRecursive(NumberOfLeadingZeroes, Counter) ->
+performMiningRecursively(NumberOfLeadingZeroes, Counter) ->
 	CommonPrefix = "ppasumarty",
 	PrefixAndKeySeperator = ";",
 	RandomString = bitcoinminer:getRandomStringFromCrypto(),
@@ -21,35 +18,30 @@ performGetHashRecursive(NumberOfLeadingZeroes, Counter) ->
 			io:fwrite("(~p): ", [NewCounter]),
 			io:fwrite("Hashed Value of ~p is ~p~n", [StringToBeHashed, HashAsString]),
 			if 
-				NewCounter < 50 ->
-					bitcoinminer:performGetHashRecursive(NumberOfLeadingZeroes, NewCounter);
+				NewCounter < 5 ->
+					bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, NewCounter);
 				true ->
 					io:fwrite("")
 			end;
 	    false ->
-			bitcoinminer:performGetHashRecursive(NumberOfLeadingZeroes, Counter)
+			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, Counter)
   	end.
 
-getRandomStringFromCrypto() -> 
-	base64:encode_to_string(crypto:strong_rand_bytes(3)).
+getRandomStringFromCrypto() -> base64:encode_to_string(crypto:strong_rand_bytes(3)).
 
-createActor(NumberOfLeadingZeroes) -> 
-	Worker1 = spawn(fun bitcoinminer:dummyReceiver/0),
-	Worker1 ! {self(), NumberOfLeadingZeroes},
-	Worker2 = spawn(fun bitcoinminer:dummyReceiver/0),
-	Worker2 ! {self(), NumberOfLeadingZeroes},
-	Worker3 = spawn(fun bitcoinminer:dummyReceiver/0),
-	Worker3 ! {self(), NumberOfLeadingZeroes},
-	Worker4 = spawn(fun bitcoinminer:dummyReceiver/0),
-	Worker4 ! {self(), NumberOfLeadingZeroes},
-	io:fwrite("\n").
+getCoins(NumberOfLeadingZeroes) -> 
+	NumberOfActors = 4,
+	lists:foldl(
+		fun(_, _) -> 
+			spawn(fun bitcoinminer:miner/0) ! {self(), NumberOfLeadingZeroes} 
+		end, 
+		[], 
+		lists:seq(1, NumberOfActors)
+	).
 
-dummyReceiver() ->
+miner() ->
 	receive
-		{From, Int} ->
-			bitcoinminer:getHash(Int),
-			io:fwrite("Worker ~p finished mining \n", [From]),
-            dummyReceiver();
-		Other ->
-            io:format("~n I've got unexpected message from ~p actor, process will be terinated ~n", [Other])
+		{From, NumberOfLeadingZeroes} -> 
+			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, 0),
+			io:fwrite("Mining finished by Actor ~p", [From])
 	end.
