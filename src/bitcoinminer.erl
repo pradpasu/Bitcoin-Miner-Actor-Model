@@ -17,16 +17,5 @@ getHash(NumberOfLeadingZeroes) ->
 	    false -> tut:getHash(NumberOfLeadingZeroes)
   	end.
 
-getRandomString(RequiredLength, CharacterSet) ->
-	lists:foldl(
-		fun(_, ResultRandomString) -> 
-			[lists:nth(rand:uniform(length(CharacterSet)),CharacterSet)]
-			++ ResultRandomString
-		end, 
-		[],
-		lists:seq(1, RequiredLength)
-	).
-
-
 getRandomStringFromCrypto() -> 
 	base64:encode_to_string(crypto:strong_rand_bytes(8)).
