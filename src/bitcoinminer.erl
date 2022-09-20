@@ -5,6 +5,7 @@
 -export([getRandomStringFromCrypto/0, performMiningRecursively/3, getCoins/1, miner/0, collectCoins/0]).
 -define(CommonPrefix, "ppasumarty").
 -define(PrefixAndKeySeparator, ";").
+-define(RecursionKillPoint, 1000).
 
 performMiningRecursively(NumberOfLeadingZeroes, Counter, BossActor) ->
 	RandomString = bitcoinminer:getRandomStringFromCrypto(),
@@ -17,7 +18,7 @@ performMiningRecursively(NumberOfLeadingZeroes, Counter, BossActor) ->
 			NewCounter = Counter + 1,
 			BossActor ! {StringToBeHashed, HashAsString},
 			if 
-				NewCounter < 50 ->
+				NewCounter < ?RecursionKillPoint ->
 					bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, NewCounter, BossActor);
 				true ->
 					ok
@@ -29,11 +30,16 @@ performMiningRecursively(NumberOfLeadingZeroes, Counter, BossActor) ->
 getRandomStringFromCrypto() -> base64:encode_to_string(crypto:strong_rand_bytes(6)).
 
 getCoins(NumberOfLeadingZeroes) ->
+	{ok, FilePointer} = file:open("CollectedBitcoins.txt", [write]),
+	io:format(FilePointer, "", []),
+	file:close("CollectedBitcoins.txt"),
 	BossActor = spawn(fun bitcoinminer:collectCoins/0),
 	NumberOfActors = 4,
 	lists:foldl(
 		fun(_, _) -> 
-			spawn(fun bitcoinminer:miner/0) ! {self(), NumberOfLeadingZeroes, BossActor}
+			ChildActorPID = spawn(fun bitcoinminer:miner/0),
+			timer:kill_after(10000, ChildActorPID),
+			ChildActorPID ! {NumberOfLeadingZeroes, BossActor}
 		end, 
 		[], 
 		lists:seq(1, NumberOfActors)
@@ -41,13 +47,14 @@ getCoins(NumberOfLeadingZeroes) ->
 
 miner() ->
 	receive
-		{_, NumberOfLeadingZeroes, BossActor} ->
+		{NumberOfLeadingZeroes, BossActor} ->
 			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, 0, BossActor)
 	end.
 
 collectCoins() ->
 	receive
 		{StringToBeHashed, HashedString} ->
-			io:fwrite("~p	~p~n", [StringToBeHashed, HashedString]),
+			{ok, FilePointer} = file:open("CollectedBitcoins.txt", [append]),
+			io:format(FilePointer, "~p	~p~n", [StringToBeHashed, HashedString]),
 			collectCoins()
 	end.
