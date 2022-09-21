@@ -52,8 +52,8 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
     <li>
         Performance Monitoring
         <ul>
-            <li>The Run times and Real Times are captured per actor rather than an aggregate of the whole system</li>
-            <li>This approach is employed to gain specific & detailed inferences</li>
+            <li>The Run times and CPU Times are captured per actor & then aggregated</li>
+            <li>This approach is employed to gain a detailed inference</li>
             <li>Furthermore, these values are written to a text file for plotting</li>
         </ul>
     </li>
@@ -110,12 +110,12 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
     <tr>
         <td>Server</td>
         <td>MacOS</td>
-        <td>8 Core CPU</td>
+        <td>8</td>
     </tr>
     <tr>
         <td>Client</td>
         <td>Windows</td>
-        <td>4 Core CPU</td>
+        <td>4</td>
     </tr>
 </table>
 
@@ -124,10 +124,62 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
 
 ## Testing Results
 
-<ul>
-    <li></li>
-</ul>
+### Size of Work Unit for Best Performance = 4 Actors
+This inference can be derived from the below table based on the CPU Time:Run Time Metric.
 
+### Results (No. of Leading Zeroes = 4)
+
+<table>
+    <th>Number of Actors</th>
+    <th>CPU Time (milliseconds)</th>
+    <th>Run Time (milliseconds)</th>    
+    <th>CPU Time : Run Time</th>
+    <tr>
+        <td>1 (Synchronous)</td>
+        <td>102794</td>
+        <td>102807</td>
+        <td>1 : 1</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>58063</td>
+        <td>111672</td>
+        <td>1 : 1.9</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>30997</td>
+        <td>114661</td>
+        <td>1 : 3.7</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>61738</td>
+        <td>138588</td>
+        <td>1 : 2.2</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>61648</td>
+        <td>130059</td>
+        <td>1 : 2.1</td>
+    </tr>
+</table>
+
+### Important Coin Details
+
+<ul>
+    Leading Zeroes: 8
+    <ul>
+        <li>ppasumarty;q/FNgETM    00000000cdd88ee1821c4f97a51f82213b17c64e1962cea7562399439bba4204</li>
+    </ul>
+    <br/>
+    Leading Zeroes: 7
+    <ul>
+        <li>ppasumarty;a0f1N2J/    0000000b86b5ef0ba85669db8b43233b01da398e4f51b787dc1833f7e2ecbd02</li>
+        <li>ppasumarty;7zd2xiel    00000001e2841e0fe2814642192abe98bfa7fb8b24d76bc5db13be1aa38da48d</li>
+    </ul>
+</ul>
 
 
 
