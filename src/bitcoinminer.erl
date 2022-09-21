@@ -5,7 +5,7 @@
 -export([getRandomStringFromCrypto/0, performMiningRecursively/3, getCoins/1, miner/0, collectCoins/0]).
 -define(CommonPrefix, "ppasumarty").
 -define(PrefixAndKeySeparator, ";").
--define(RecursionKillPoint, 1000).
+-define(RecursionKillPoint, 10).
 
 performMiningRecursively(NumberOfLeadingZeroes, Counter, BossActor) ->
 	RandomString = bitcoinminer:getRandomStringFromCrypto(),
@@ -35,12 +35,12 @@ getCoins(NumberOfLeadingZeroes) ->
 	io:format(FilePointer, "", []),
 	file:close("CollectedBitcoins.txt"),
 	BossActor = spawn(fun bitcoinminer:collectCoins/0),
-	NumberOfActors = 4,
+	NumberOfActors = 16,
 	lists:foldl(
 		fun(_, _) -> 
 			ChildActorPID = spawn(fun bitcoinminer:miner/0),
-			timer:kill_after(1000, ChildActorPID),
-			ChildActorPID ! {NumberOfLeadingZeroes, BossActor}
+%%			timer:kill_after(1000, ChildActorPID),
+			ChildActorPID ! {ChildActorPID, NumberOfLeadingZeroes, BossActor}
 		end, 
 		[], 
 		lists:seq(1, NumberOfActors)
@@ -48,8 +48,16 @@ getCoins(NumberOfLeadingZeroes) ->
 
 miner() ->
 	receive
-		{NumberOfLeadingZeroes, BossActor} ->
-			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, 0, BossActor)
+		{From, NumberOfLeadingZeroes, BossActor} ->
+			statistics(runtime),
+			statistics(wall_clock),
+			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, 0, BossActor),
+			{_,RunTimeForMining} = statistics(runtime),
+			{_,WallClockTimeAfterMining} = statistics(wall_clock),
+			io:format("Statistics of Actor: ~p ~n", [From]),
+			io:format("Run time ~p Milliseconds ~n", [RunTimeForMining]),
+			io:format("CPU time ~p Milliseconds ~n", [WallClockTimeAfterMining]),
+			io:format("**************************** ~n")
 	end.
 
 collectCoins() ->
@@ -57,6 +65,6 @@ collectCoins() ->
 		{StringToBeHashed, HashedString} ->
 			{ok, FilePointer} = file:open("CollectedBitcoins.txt", [append]),
 			io:format(FilePointer, "~p	~p~n", [StringToBeHashed, HashedString]),
-			io:fwrite("~p	~p~n", [StringToBeHashed, HashedString]),
+%%			io:fwrite("~p	~p~n", [StringToBeHashed, HashedString]),
 			collectCoins()
 	end.
