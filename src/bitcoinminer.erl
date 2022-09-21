@@ -49,22 +49,21 @@ getCoins(NumberOfLeadingZeroes) ->
 miner() ->
 	receive
 		{From, NumberOfLeadingZeroes, BossActor} ->
+			{ok, FilePointer} = file:open("CollectedBitcoins.txt", [append]),
 			statistics(runtime),
 			statistics(wall_clock),
 			bitcoinminer:performMiningRecursively(NumberOfLeadingZeroes, 0, BossActor),
 			{_,RunTimeForMining} = statistics(runtime),
 			{_,WallClockTimeAfterMining} = statistics(wall_clock),
-			io:format("Statistics of Actor: ~p ~n", [From]),
-			io:format("Run time ~p Milliseconds ~n", [RunTimeForMining]),
-			io:format("CPU time ~p Milliseconds ~n", [WallClockTimeAfterMining]),
-			io:format("**************************** ~n")
+			io:format(FilePointer, "Statistics of Actor: ~p ~n", [From]),
+			io:format(FilePointer, "Run time ~p Milliseconds ~n", [RunTimeForMining]),
+			io:format(FilePointer, "CPU time ~p Milliseconds ~n", [WallClockTimeAfterMining]),
+			io:format(FilePointer, "**************************** ~n", [])
 	end.
 
 collectCoins() ->
 	receive
 		{StringToBeHashed, HashedString} ->
-			{ok, FilePointer} = file:open("CollectedBitcoins.txt", [append]),
-			io:format(FilePointer, "~p	~p~n", [StringToBeHashed, HashedString]),
-%%			io:fwrite("~p	~p~n", [StringToBeHashed, HashedString]),
+			io:fwrite("~p	~p~n", [StringToBeHashed, HashedString]),
 			collectCoins()
 	end.
