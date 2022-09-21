@@ -30,7 +30,7 @@ performMiningRecursively(NumberOfLeadingZeroes, Counter, BossActor) ->
 getRandomStringFromCrypto() -> base64:encode_to_string(crypto:strong_rand_bytes(6)).
 
 getCoins(NumberOfLeadingZeroes) ->
-	io:fwrite("Coin collection started"),
+	io:fwrite("Coin collection started ~n"),
 	{ok, FilePointer} = file:open("CollectedBitcoins.txt", [write]),
 	io:format(FilePointer, "", []),
 	file:close("CollectedBitcoins.txt"),
@@ -39,7 +39,7 @@ getCoins(NumberOfLeadingZeroes) ->
 	lists:foldl(
 		fun(_, _) -> 
 			ChildActorPID = spawn(fun bitcoinminer:miner/0),
-			timer:kill_after(5000, ChildActorPID),
+			timer:kill_after(1000, ChildActorPID),
 			ChildActorPID ! {NumberOfLeadingZeroes, BossActor}
 		end, 
 		[], 
