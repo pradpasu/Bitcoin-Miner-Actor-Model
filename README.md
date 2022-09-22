@@ -127,7 +127,7 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
 ## Testing Results
 
 ### Size of Work Unit for Best Performance = 8 Actors
-This inference can be derived from the below table based on the Real Time:CPU Time Metric. It is seen that this ratio is significant at 8 actors and then stagnates afterwards. Since there is no major improvement over 8 actors with 16 and 32 actors, it is unnecessary to use more than 8 actors.
+This inference can be derived from the below table based on the CPU Time:Real Time Metric. It is seen that this ratio is significant at 8 actors and then stagnates afterwards. Since there is no major improvement over 8 actors with 16 and 32 actors, it is unnecessary to use more than 8 actors.
 
 ### Results of mining 512 coins (No. of Leading Zeroes = 4)
 
