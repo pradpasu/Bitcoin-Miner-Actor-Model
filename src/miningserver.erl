@@ -6,12 +6,15 @@
 -define(SERVER, ?MODULE).
 -record(test_state, {}).
 
+%% The start_link enables the server to start receiving calls from the client through RPC i.e. Remote Procedure Call
 start_link() ->
   gen_server:start_link({global, ?SERVER}, ?MODULE, [], []).
 
 init([]) ->
   {ok, #test_state{}}.
 
+%% Once called, this function has to call the runDistributedMining function
+%% and essentially start the required task of mining bitcoins.
 handle_call({triggerMiningOnServer, NumberOfLeadingZeroes}, _From, State) ->
   {reply, {miningserver:runDistributedMining(NumberOfLeadingZeroes)},State}.
 
@@ -27,6 +30,8 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
 
+%% Once the client calls the triggerMiningOnServer function with the required number of leading zeroes,
+%% the below function handles it.
 triggerMiningOnServer(NumberOfLeadingZeroes) ->
   gen_server:call({global,?MODULE},{triggerMiningOnServer, NumberOfLeadingZeroes}).
 

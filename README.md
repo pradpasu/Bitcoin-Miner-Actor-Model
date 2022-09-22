@@ -1,6 +1,8 @@
 # DOSP Project 1: Bitcoin Mining - Erlang's Actor Model
 ****
-## Group Members
+## Group Details
+<p><strong>Name: [ Pradyumna_Pasumarty : Sai Ram Varma_Budharaju ]</strong></p>
+<strong>Members</strong>
 <ol>
     <li>Sai Ram Varma Budharaju (UFID: 3337-4276 | <a>sbudharaju@ufl.edu</a>)</li>
     <li>Pradyumna Pasumarty (UFID: 6907-9707 | <a>ppasumarty@ufl.edu</a>)</li>
@@ -52,7 +54,7 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
     <li>
         Performance Monitoring
         <ul>
-            <li>The Run times and CPU Times are captured per actor & then aggregated</li>
+            <li>The Real times and CPU Times are captured per actor & then aggregated</li>
             <li>This approach is employed to gain a detailed inference</li>
             <li>Furthermore, these values are written to a text file for plotting</li>
         </ul>
@@ -97,7 +99,7 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
 ## Testing Methodology
 
 <ol>
-    <li>The application was initially tested for mining 400 coins synchronously i.e. without any actors</li>
+    <li>The application was initially tested for mining 512 coins synchronously i.e. without any actors</li>
     <li>The performance was measured for this execution for 4 leading zeroes</li>
     <li>The actor model was then implemented and the application was re-tested with the same parameters</li>
     <li>A significant performance improvement is observed when the Actor Model is implemented</li>
@@ -108,68 +110,74 @@ Furthermore, a 'Client Server' architecture was employed to simulate the realist
     <th>Operating System</th>
     <th>Cores</th>
     <tr>
-        <td>Server</td>
+        <td>Client</td>
         <td>MacOS</td>
         <td>8</td>
     </tr>
     <tr>
-        <td>Client</td>
+        <td>Server</td>
         <td>Windows</td>
-        <td>4</td>
+        <td>8</td>
     </tr>
 </table>
-
+<i>Note: The target of 512 coins was chosen because it's a multiple of two. This allows us to test the application with number of actors as multiples of two i.e. 2,4,8,16 actors & so on. The target is always evenly split among the actors.</i>
 
 ****
 
 ## Testing Results
 
-### Size of Work Unit for Best Performance = 4 Actors
-This inference can be derived from the below table based on the CPU Time:Run Time Metric.
+### Size of Work Unit for Best Performance = 8 Actors
+This inference can be derived from the below table based on the Real Time:CPU Time Metric. It is seen that this ratio peaks at 8 actors and then plateaus afterwards. Since there is no significant improvement over 8 actors with 16 and 32 actors, it is unnecessary to use more than 8 actors.
 
-### Results (No. of Leading Zeroes = 4)
+### Results of mining 512 coins (No. of Leading Zeroes = 4)
 
 <table>
     <th>Number of Actors</th>
-    <th>CPU Time (milliseconds)</th>
-    <th>Run Time (milliseconds)</th>    
-    <th>CPU Time : Run Time</th>
+    <th>Real Time (milliseconds)</th>
+    <th>CPU Time (milliseconds)</th>    
+    <th>Real Time : CPU Time</th>
     <tr>
         <td>1 (Synchronous)</td>
-        <td>102794</td>
-        <td>102807</td>
+        <td>218125</td>
+        <td>230616</td>
         <td>1 : 1</td>
     </tr>
     <tr>
         <td>2</td>
-        <td>58063</td>
-        <td>111672</td>
-        <td>1 : 1.9</td>
+        <td>110122</td>
+        <td>201406</td>
+        <td>1 : 1.8</td>
     </tr>
     <tr>
         <td>4</td>
-        <td>30997</td>
-        <td>114661</td>
-        <td>1 : 3.7</td>
+        <td>70260</td>
+        <td>256015</td>
+        <td>1 : 3.6</td>
     </tr>
     <tr>
         <td>8</td>
-        <td>61738</td>
-        <td>138588</td>
-        <td>1 : 2.2</td>
+        <td>62650</td>
+        <td>400937</td>
+        <td>1 : 6.4</td>
     </tr>
     <tr>
         <td>16</td>
-        <td>61648</td>
-        <td>130059</td>
-        <td>1 : 2.1</td>
+        <td>50785</td>
+        <td>349562</td>
+        <td>1 : 6.8</td>
+    </tr>
+    <tr>
+        <td>32</td>
+        <td>57192</td>
+        <td>397250</td>
+        <td>1 : 6.9</td>
     </tr>
 </table>
 
 ### Important Coin Details
 
 <ul>
-    Leading Zeroes: 8
+    Leading Zeroes: 8 (Maximum)
     <ul>
         <li>ppasumarty;q/FNgETM    00000000cdd88ee1821c4f97a51f82213b17c64e1962cea7562399439bba4204</li>
     </ul>
@@ -181,7 +189,9 @@ This inference can be derived from the below table based on the CPU Time:Run Tim
     </ul>
 </ul>
 
-
+<i>
+Note: The system is capable of mining coins with more leading zeroes, but since this doesn't 
+execute in a realistic timeframe, the maximum is denoted as 8.</i>
 
 
 
