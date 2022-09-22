@@ -176,6 +176,8 @@ This inference can be derived from the below table based on the Real Time:CPU Ti
 <p>
     <img src="img.png" alt="Performance vs Number of Actors">
 </p>
+
+
 ### Important Coin Details
 
 <ul>
