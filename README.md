@@ -173,7 +173,9 @@ This inference can be derived from the below table based on the Real Time:CPU Ti
         <td>1 : 6.9</td>
     </tr>
 </table>
-
+<p>
+    <img src="img.png" alt="Performance vs Number of Actors">
+</p>
 ### Important Coin Details
 
 <ul>
@@ -188,7 +190,6 @@ This inference can be derived from the below table based on the Real Time:CPU Ti
         <li>ppasumarty;7zd2xiel    00000001e2841e0fe2814642192abe98bfa7fb8b24d76bc5db13be1aa38da48d</li>
     </ul>
 </ul>
-
 <i>
 Note: The system is capable of mining coins with more leading zeroes, but since this doesn't 
 execute in a realistic timeframe, the maximum is denoted as 8.</i>
