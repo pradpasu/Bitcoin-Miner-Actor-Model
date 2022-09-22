@@ -133,44 +133,44 @@ This inference can be derived from the below table based on the Real Time:CPU Ti
 
 <table>
     <th>Number of Actors</th>
-    <th>Real Time (milliseconds)</th>
     <th>CPU Time (milliseconds)</th>    
-    <th>Real Time : CPU Time</th>
+    <th>Real Time (milliseconds)</th>
+    <th>CPU Time : Real Time</th>
     <tr>
         <td>1 (Synchronous)</td>
-        <td>218125</td>
         <td>230616</td>
+        <td>218125</td>
         <td>1 : 1</td>
     </tr>
     <tr>
         <td>2</td>
-        <td>110122</td>
         <td>201406</td>
-        <td>1 : 1.8</td>
+        <td>110122</td>
+        <td>1.8 : 1</td>
     </tr>
     <tr>
         <td>4</td>
-        <td>70260</td>
         <td>256015</td>
-        <td>1 : 3.6</td>
+        <td>70260</td>
+        <td>3.6 : 1</td>
     </tr>
     <tr>
         <td>8</td>
-        <td>62650</td>
         <td>400937</td>
-        <td>1 : 6.4</td>
+        <td>62650</td>
+        <td>6.4 : 1</td>
     </tr>
     <tr>
         <td>16</td>
-        <td>50785</td>
         <td>349562</td>
-        <td>1 : 6.8</td>
+        <td>50785</td>
+        <td>6.8 : 1</td>
     </tr>
     <tr>
         <td>32</td>
-        <td>57192</td>
         <td>397250</td>
-        <td>1 : 6.9</td>
+        <td>57192</td>
+        <td>6.9 : 1</td>
     </tr>
 </table>
 <p>
